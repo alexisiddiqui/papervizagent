@@ -1,0 +1,110 @@
+% ============================================================
+% Panel B — Engine
+% Strategy: place each card box first (chained from prev.south),
+%            then anchor all content to that box.
+% ============================================================
+\coordinate (pb_nw) at (\PanelBx, \PanelsY);
+
+\begin{pgfonlayer}{background}
+\node[panelB, minimum width=\PanelW cm, minimum height=\PanelH cm, anchor=north west] (panel_B) at (pb_nw) {};
+\end{pgfonlayer}
+
+\node[panelLabel, anchor=north west] (b_label) at ($(panel_B.north west) + (\PanelHeaderX, \PanelHeaderY)$) {(b)};
+\node[annotation, anchor=north] (b_sub) at ($(panel_B.north) + (0, \PanelSubtitleY)$) {%
+    \fontsize{10}{12}\selectfont\color{cGreyMid}Build \& Fit Model};
+
+% ── Card 1: Map Structures to Observables ──────────────────────────────────
+\begin{pgfonlayer}{midground}
+\node[tealStep, minimum width=\PanelContentW, minimum height=3.2cm, anchor=north] (b_s1_box)
+    at ($(panel_B.north west) + (0.5*\PanelW, \PanelBFeatsY)$) {};
+\end{pgfonlayer}
+
+\node[cardHeader, anchor=north, align=center, text width=\PanelContentInnerW] (b_s1_h)
+    at ($(b_s1_box.north) + (0, 0.15)$) {Map Structures to Observables};
+
+\node[anchor=center] (b_hmap_container)
+    at ($(b_s1_box.north west) + (\PanelBColLeftXRel, 1.85)$) {
+    \begin{tikzpicture}[baseline={(b_h.center)}]
+        \node[opacity=0.45, xshift=2pt, yshift=2pt] (b_h_bg) {\safeincludegraphics[width=1.3cm]{\ComponentsPdfDir/heatmap_thumb.pdf}};
+        \node (b_h) {\safeincludegraphics[width=1.3cm]{\ComponentsPdfDir/heatmap_thumb.pdf}};
+        \node[annotation, rotate=90, anchor=south, inner sep=3pt] at (b_h.west) {\fontsize{6.5}{7.5}\selectfont residues};
+        \node[annotation, anchor=north, inner sep=2pt] at (b_h.south) {\fontsize{6.5}{7.5}\selectfont frames};
+        \node[annotation, anchor=south, scale=0.9, yshift=2pt] at (b_h.north) {(x H-bonds, contacts, ... )};
+    \end{tikzpicture}
+};
+
+\node[anchor=center] (b_arrow)
+    at ($(b_s1_box.north west) + (\PanelBColMidXRel, 1.85)$) {
+    \tikz \draw[procArrow, line width=0.8pt] (0,0) -- (0.8,0);
+};
+
+\node[anchor=center] (b_r_p)
+    at ($(b_s1_box.north west) + (\PanelBColRightXRel, 1.85)$) {
+    \begin{tikzpicture}[baseline={(b_rp.center)}]
+        \node (b_rp) {\safeincludegraphics[width=2.0cm]{\ComponentsPdfDir/residue_peptide.pdf}};
+        \node[annotation, rotate=90, anchor=south, inner sep=3pt] at (b_rp.west) {\fontsize{6.5}{7.5}\selectfont residue};
+        \node[annotation, anchor=south, inner sep=2pt] at (b_rp.north) {\fontsize{6.5}{7.5}\selectfont peptide/fragment};
+    \end{tikzpicture}
+};
+
+% ── Card 2: Define Objective ───────────────────────────────────────────────
+\begin{pgfonlayer}{midground}
+\node[goldObjective, minimum width=\PanelContentW, minimum height=\PanelBObjH, anchor=north] (b_s3_box)
+    at ($(b_s1_box.south) + (0, \CardGap)$) {};
+\end{pgfonlayer}
+
+\node[cardHeader, anchor=north, align=center, text width=\PanelContentInnerW] (b_s3_h)
+    at ($(b_s3_box.north) + (0, 0.15)$) {Define Objective};
+
+\node[anchor=north, align=center, scale=0.8, transform shape] (b_loss_eq)
+    at ($(b_s3_h.south) + (0, 0.50)$) {
+    \color{cCoral}\rmfamily
+    {\fontsize{26}{30}\selectfont $\mathcal{L}$} 
+    \raisebox{0.6ex}{\fontsize{12}{17}\selectfont = Data Fidelity + Plausibility + Priors}
+};
+
+\node[whiteCard, scale=0.8, transform shape, anchor=center, align=center,
+      text width=2.6cm, minimum width=3.0cm, minimum height=1.5cm, inner sep=0pt]
+    (b_v_l) at ($(b_s3_box.north west) + (\PanelBColLeftXRel, 3.1)$)
+    {\textbf{Error + Work}\\ {\fontsize{7}{8}\selectfont\color{cGreyMid}(Maximum Entropy)}};
+
+\node[anchor=center] (b_gear)
+    at ($(b_s3_box.north west) + (\PanelBColMidXRel, 3.1)$) {%
+    \begin{tikzpicture}[x=1cm, y=1cm, baseline=(current bounding box.center)]
+        \funnelgearicon[1.5]
+    \end{tikzpicture}%
+};
+
+\node[whiteCard, scale=0.8, transform shape, anchor=center, align=center,
+      text width=2.6cm, minimum width=3.0cm, minimum height=1.5cm, inner sep=0pt]
+    (b_v_r) at ($(b_s3_box.north west) + (\PanelBColRightXRel, 3.1)$)
+    {\textbf{+ Knowledge}\\ {\fontsize{7}{8}\selectfont\color{cGreyMid}(e.g. covariance)}};
+
+% ── Card 3: Fit to Target ──────────────────────────────────────────────────
+\begin{pgfonlayer}{midground}
+\node[coralOptimise, minimum width=\PanelContentW, minimum height=3.2cm, anchor=north] (b_s4_box)
+    at ($(b_s3_box.south) + (0, \CardGap)$) {};
+\end{pgfonlayer}
+
+\node[cardHeader, anchor=north, align=center, text width=\PanelContentInnerW] (b_s4_h)
+    at ($(b_s4_box.north) + (0, 0.15)$) {Fit to Target};
+
+\node[anchor=north, align=center] (b_params_box) at ($(b_s4_h.south) + (0, 0.15)$) {
+    \fontsize{9}{11}\selectfont
+    \renewcommand{\arraystretch}{0.9}
+    \begin{tabular}{c@{\hspace{6pt}}l @{\hspace{1.0cm}} c@{\hspace{6pt}}l}
+        \color{cNavy}$\omega$ & & \color{cNavy}$\beta$ & \\[-2pt]
+        \safeincludegraphics[width=0.8cm]{\ComponentsPdfDir/tiny_bar_chart.pdf} & \shortstack[l]{\textbf{Relative} \\ \textbf{Populations}} &
+        \safeincludegraphics[width=1.0cm]{\ComponentsPdfDir/tiny_sliders.pdf} & \shortstack[l]{\textbf{Forward-Model} \\ \textbf{Parameters}}
+    \end{tabular}
+};
+
+\node[annotation, anchor=north] (b_si_t) at ($(b_params_box.south) + (0, -0.05)$)
+    {Differentiable fitting of both structures and conditions};
+
+\matrix (b4_m) [anchor=south, column sep=0.6cm] at ($(b_s4_box.south) + (0, 0.3)$) {
+    \node[pill] {modular}; & \node[pill] {efficient}; & \node[pill] {scalable}; \\
+};
+
+\draw[procArrow, line width=1.2pt, color=black] (b_s1_box.south) -- (b_s3_box.north);
+\draw[procArrow, line width=1.2pt, color=black] (b_s3_box.south) -- (b_s4_box.north);

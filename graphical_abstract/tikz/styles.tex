@@ -1,0 +1,101 @@
+\usetikzlibrary{arrows.meta, backgrounds, calc, fit, positioning, matrix, shapes.misc}
+
+% ---- Layout constants and colors (auto-generated, edit config.py) ----
+\input{generated_layout.tex}
+\input{generated_colors.tex}
+
+% Declare layers for proper z-ordering
+\pgfdeclarelayer{canvas}
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{midground}
+\pgfsetlayers{canvas,background,midground,main}
+
+% Typography commands for inline use
+\newcommand{\mathvar}[1]{\text{\fontsize{10}{12}\selectfont\itshape\sffamily\color{cNavy}#1}}
+
+% Safe asset include helper
+\newcommand{\safeincludegraphics}[2][]{%
+  \IfFileExists{#2}{\includegraphics[#1]{#2}}{\fbox{\scriptsize missing}}%
+}
+
+% --- Core Styles ---
+\tikzset{panel/.style={rounded corners=12pt, draw=cCharcoal, line width=0.8pt, inner sep=0pt}}
+\tikzset{panelA/.style={panel, fill=cZoneA}}
+\tikzset{panelB/.style={panel, fill=cZoneB}}
+\tikzset{panelC/.style={panel, fill=cZoneC}}
+
+\tikzset{card/.style={rounded corners=8pt, draw=cCharcoal, line width=0.6pt, fill=white, inner sep=\CardInnerSep cm}}
+\tikzset{whiteCard/.style={card}}
+\tikzset{tealStep/.style={rounded corners=6pt, draw=cCharcoal, line width=0.8pt, fill=white, inner sep=\CardInnerSep cm}}
+\tikzset{goldObjective/.style={rounded corners=8pt, draw=cCharcoal, line width=1.0pt, fill=white, inner sep=\CardInnerSep cm}}
+\tikzset{coralOptimise/.style={rounded corners=8pt, draw=cCharcoal, line width=1.0pt, fill=white, inner sep=\CardInnerSep cm}}
+\tikzset{dashedBox/.style={rounded corners=6pt, draw=cCharcoal, line width=0.8pt, dashed, dash pattern=on 3pt off 2pt, inner sep=\CardInnerSep cm}}
+
+\tikzset{pill/.style={rounded rectangle, draw=cCharcoal, line width=0.8pt, fill=cTealLight, inner sep=3pt, font=\fontsize{8}{9}\selectfont\bfseries\sffamily\color{cNavy}}}
+\tikzset{goldpill/.style={rounded rectangle, draw=cCharcoal, line width=0.8pt, fill=cCoralLight, inner sep=2pt, font=\fontsize{8}{10}\selectfont\bfseries\sffamily\color{cNavy}}}
+\tikzset{goldborder/.style={rounded corners=8pt, draw=cLavender, line width=1.0pt, fill=cLavenderLight!60, inner sep=4pt}}
+
+% --- Spec-compliant aliases ---
+\tikzset{stepbox/.style={card}}
+\tikzset{tealbox/.style={tealStep}}
+\tikzset{optbox/.style={dashedBox}}
+\tikzset{goldbox/.style={goldObjective}}
+\tikzset{coralbox/.style={coralOptimise}}
+
+% --- Arrows ---
+\tikzset{procArrow/.style={-{Latex[length=4pt]}, thin, color=cSlateLight}}
+\tikzset{dashedArrow/.style={-{Latex[length=4pt]}, dashed, dash pattern=on 3pt off 2pt, color=cGreyMid}}
+\tikzset{flow_arrow/.style={procArrow, line width=0.8pt}}
+
+% --- Typography ---
+\tikzset{figuretitle/.style={font=\fontsize{20}{22}\selectfont\bfseries\sffamily\color{cNavy}}}
+\tikzset{panelLabel/.style={font=\fontsize{14}{16}\selectfont\bfseries\sffamily\color{cNavy}}}
+\tikzset{panelHeader/.style={font=\fontsize{14}{16}\selectfont\bfseries\sffamily\color{cNavy}}}
+\tikzset{panelSubtitle/.style={font=\fontsize{10}{12}\selectfont\sffamily\color{cNavy}}}
+\tikzset{cardHeader/.style={font=\fontsize{10}{12}\selectfont\bfseries\sffamily\color{cNavy}}}
+\tikzset{moduleTitle/.style={font=\fontsize{10}{12}\selectfont\bfseries\sffamily\color{cNavy}}}
+\tikzset{annotation/.style={font=\fontsize{8}{9}\selectfont\itshape\sffamily\color{cGreyMid}}}
+\tikzset{labelTeal/.style={font=\fontsize{10}{12}\selectfont\bfseries\sffamily\color{cTeal}}}
+\tikzset{labelCoral/.style={font=\fontsize{10}{12}\selectfont\bfseries\sffamily\color{cCoral}}}
+
+% Helper for filled chevrons
+\newcommand{\filledchevron}[1]{
+  \fill[cNavy] ([xshift=-0.20cm, yshift=-0.35cm]#1) -- ++(0.3,0.35) -- ++(-0.3,0.35) -- ++(0.4,0) -- ++(0.3,-0.35) -- ++(-0.3,-0.35) -- cycle;
+}
+
+% Native funnel+gear icon (drawn in-panel to avoid imported-PDF bbox clipping).
+% Usage: \funnelgearicon[<scale>] inside a tikzpicture/scope.
+\newcommand{\funnelgearicon}[1][1]{%
+  \begin{scope}[xscale=#1, yscale=-#1, line join=round, line cap=round]
+    % Funnel silhouette and interior channel
+    \filldraw[fill=cLilac!36, draw=cLilac, line width=0.42pt]
+      (-0.45,-0.50) -- (0.45,-0.50) -- (0.18,-0.15) -- (-0.18,-0.15) -- cycle;
+    \fill[white, opacity=0.42]
+      (-0.35,-0.45) -- (0.35,-0.45) -- (0.12,-0.21) -- (-0.12,-0.21) -- cycle;
+    \draw[cLilac!95!cNavy, line width=0.42pt, opacity=0.85] (-0.45,-0.50) -- (0.45,-0.50);
+    \filldraw[fill=cLilac!23, draw=cLilac, line width=0.38pt]
+      (-0.08,-0.15) -- (0.08,-0.15) -- (0.06,0.13) -- (-0.06,0.13) -- cycle;
+
+    % Particles flowing through the funnel
+    \foreach \px/\py in {
+      -0.36/-0.40, -0.21/-0.43, -0.04/-0.41, 0.15/-0.39, 0.33/-0.36,
+      -0.28/-0.30, -0.10/-0.33, 0.08/-0.30, 0.25/-0.28,
+      -0.03/-0.23, 0.02/-0.19
+    }{
+      \fill[cNavy, opacity=0.58] (\px,\py) circle[radius=0.015];
+    }
+
+    % Gear
+    \def\gearcx{0.19}
+    \def\gearcy{-0.15}
+    \def\gearouter{0.17}
+    \def\gearinner{0.08}
+    \foreach \ang in {0,45,...,315}{
+      \begin{scope}[shift={(\gearcx,\gearcy)}, rotate=\ang]
+        \fill[cNavy] (\gearouter,-0.028) rectangle ++(0.052,0.056);
+      \end{scope}
+    }
+    \fill[cNavy, opacity=0.95] (\gearcx,\gearcy) circle[radius=\gearouter];
+    \fill[white] (\gearcx,\gearcy) circle[radius=\gearinner];
+  \end{scope}%
+}

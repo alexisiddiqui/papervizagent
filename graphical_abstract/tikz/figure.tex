@@ -1,0 +1,56 @@
+\documentclass[tikz, border=2mm]{standalone}
+
+\usepackage{amsmath}
+\usepackage[scaled]{helvet}
+\usepackage{sansmath}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\pgfplotsset{compat=1.18}
+
+\input{styles.tex}
+\input{asset_paths.tex}
+
+\begin{document}
+\begin{tikzpicture}[x=1cm, y=-1cm]
+\sansmath
+
+\begin{pgfonlayer}{canvas}
+\fill[white] (0,0) rectangle (\CanvasW, \CanvasH);
+\end{pgfonlayer}
+
+\node[figuretitle, anchor=north west, align=left] at (\FigureTitleX,\FigureTitleY) {
+    jaxENT workflow for ensemble-experiment integration and hypothesis testing
+};
+
+\input{panels/panel_a.tex}
+\input{panels/panel_b.tex}
+\input{panels/panel_c.tex}
+
+% Main inter-panel flow (Chevrons)
+\coordinate (chevron_y_ref) at (0,\InterPanelChevronY);
+\path (panel_A.east) -- (panel_B.west) coordinate[midway] (ab_mid);
+\path (panel_B.east) -- (panel_C.west) coordinate[midway] (bc_mid);
+
+% Robust drawn chevrons instead of pointed arrows
+\filledchevron{ab_mid |- chevron_y_ref}
+\filledchevron{bc_mid |- chevron_y_ref}
+
+% Optional dashed route in bottom lane
+\coordinate (flow_lane_ref) at (0,\FlowLaneY);
+\coordinate (opt_lane_right) at (bc_mid |- flow_lane_ref);
+
+% Terminate on weight distribution thumbnail in C
+\coordinate (opt_target) at (c3_thumb_weightdist.south);
+
+% Draw behind everything (background layer)
+\begin{pgfonlayer}{background}
+\end{pgfonlayer}
+
+\draw[dashedArrow, line width=1.2pt, rounded corners=6pt]
+  (a_optional_anchor_out.center) -- (a_optional_anchor_out.center |- flow_lane_ref)
+  -- (opt_target |- flow_lane_ref)
+  -- (opt_target);
+
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,121 @@
+% ============================================================
+% Panel C — Quantify Robustness
+% Strategy: align C's cards with Panel B's boundaries, then tighten.
+%           B1 area + B2 area -> Combined C12
+%           B3 area -> C3
+% ============================================================
+\coordinate (pc_nw) at (\PanelCx, \PanelsY);
+
+\begin{pgfonlayer}{background}
+\node[panelC, minimum width=\PanelCW cm, minimum height=\PanelH cm, anchor=north west] (panel_C) at (pc_nw) {};
+\end{pgfonlayer}
+
+\node[panelLabel, anchor=north west] (c_label) at ($(panel_C.north west) + (\PanelHeaderX, \PanelHeaderY)$) {(c)};
+\node[annotation, anchor=north] (c_subtitle_text)
+    at ($(panel_C.north) + (0, \PanelSubtitleY)$)
+    {\fontsize{10}{12}\selectfont\color{cGreyMid}Quantify Robustness};
+
+% ── Combined Card: Validation and Hypothesis Testing ───────────────────────
+% Height reduced for compactness: 7.4cm (was 8.05cm)
+\begin{pgfonlayer}{midground}
+\node[goldObjective, minimum width=\PanelCContentW, minimum height=6.25cm, anchor=north] (c_combined_box)
+    at ($(panel_C.north west) + (0.5*\PanelCW, \PanelCCombinedY)$) {};
+\end{pgfonlayer}
+
+\node[cardHeader, anchor=north, align=center, text width=\PanelCContentInnerW] (c12_header)
+    at ($(c_combined_box.north) + (0, 0.15)$) {Validation and Hypothesis Testing};
+
+% ── Hypothesis content — upper portion (centred at Y_rel 2.6) ──────────────
+
+\coordinate (c_hyp_list_ctr)
+    at ($(c_combined_box.north west) + (\PanelCColLeftXRel, 2.6)$);
+
+\node[anchor=center, scale=0.85] (c_h2_img) at (c_hyp_list_ctr)
+    {\safeincludegraphics[width=1.22cm]{\ProcessedDir/h2_coral.png}};
+\node[anchor=east, align=center, scale=0.8, xshift=-0.0cm] (c_h2_lbl) at (c_h2_img.west)
+    {\fontsize{8}{9}\selectfont\bfseries H$_2$\\\fontsize{7}{8}\selectfont(85\%)};
+
+\node[anchor=south, scale=0.85, yshift=0.18cm] (c_h1_img) at (c_h2_img.north)
+    {\safeincludegraphics[width=1.22cm]{\ProcessedDir/h1_teal.png}};
+\node[anchor=east, align=center, scale=0.8, xshift=-0.0cm] (c_h1_lbl) at (c_h1_img.west)
+    {\fontsize{8}{9}\selectfont\bfseries H$_1$\\\fontsize{7}{8}\selectfont(0\%)};
+
+\node[anchor=north, scale=0.85, yshift=-0.18cm] (c_h3_img) at (c_h2_img.south)
+    {\safeincludegraphics[width=1.22cm]{\ProcessedDir/h3_lavender.png}};
+\node[anchor=east, align=center, scale=0.8, xshift=-0.0cm] (c_h3_lbl) at (c_h3_img.west)
+    {\fontsize{8}{9}\selectfont\bfseries H$_3$\\\fontsize{7}{8}\selectfont(15\%)};
+
+\node[annotation, anchor=north, align=center] (c_hyp_annot)
+    at ($(c_h3_img.south) + (0, -0.2)$) {($\omega$ \%)};
+
+% Scorecard (middle column)
+\node[anchor=center, scale=0.85] (c_scorecard)
+    at ($(c_combined_box.north west) + (\PanelCColMidXRel, 2.6)$)
+    {\safeincludegraphics[width=2.45cm]{\ComponentsPdfDir/scorecard.pdf}};
+
+% Best hypothesis (right column)
+\node[goldborder, anchor=center, inner sep=0.25cm, scale=0.95] (c_best_hypothesis)
+    at ($(c_combined_box.north west) + (\PanelCColRightXRel, 2.6)$)
+    {\safeincludegraphics[width=1.60cm]{\ProcessedDir/best_hypothesis.png}};
+\node[anchor=north, align=center,
+      font=\fontsize{9}{10}\selectfont\bfseries\sffamily\color{cLavender}, yshift=1pt]
+    at (c_best_hypothesis.south) {Best\\Hypothesis};
+
+% Arrows
+\draw[procArrow] (c_h1_img.east) -- ($(c_scorecard.west) + (0, -0.62)$);
+\draw[procArrow] (c_h2_img.east) -- (c_scorecard.west);
+\draw[procArrow] (c_h3_img.east) -- ($(c_scorecard.west) + (0, 0.62)$);
+\draw[procArrow] (c_scorecard.east) -- (c_best_hypothesis.west);
+
+% ── Validation pills — bottom portion (centred at Y_rel 6.2) ───────────────
+% Shifted UP as well to close gap
+
+\node[tealbox, scale=0.8, anchor=center, align=center,
+      minimum width=3.0cm, minimum height=1.22cm, text width=2.6cm, inner sep=0pt]
+    (c_v1) at ($(c_combined_box.north west) + (\PanelCColLeftXRel, 5.5)$)
+    {Split types /\\Replicates};
+\node[tealbox, scale=0.8, anchor=center, align=center,
+      minimum width=3.0cm, minimum height=1.22cm, text width=2.6cm, inner sep=0pt]
+    (c_v2) at ($(c_combined_box.north west) + (\PanelCColMidXRel, 5.5)$)
+    {Robust success\\metrics};
+\node[optbox, scale=0.8, anchor=center, align=center,
+      minimum width=3.0cm, minimum height=1.22cm, text width=2.6cm, inner sep=0pt,
+      font=\color{cGreyMid}\sffamily]
+    (c_v3) at ($(c_combined_box.north west) + (\PanelCColRightXRel, 5.5)$)
+    {Cross-validation\\(orthogonal data)};
+
+% ── Card 3: Outputs (interpretable) ────────────────────────────────────────
+% Height 3.2cm. It follows c_combined_box.south, so bringing up the box
+% naturally brings up this secondary card to match the cluster.
+\begin{pgfonlayer}{midground}
+\node[coralOptimise, minimum width=\PanelCContentW, minimum height=3.2cm, anchor=north] (c_outputs_box)
+    at ($(c_combined_box.south) + (0, \CardGap)$) {};
+\end{pgfonlayer}
+
+\node[cardHeader, anchor=north, align=center, text width=\PanelCContentInnerW] (c3_header)
+    at ($(c_outputs_box.north) + (0, 0.15)$) {Outputs (interpretable)};
+
+% Symbol row
+\node[anchor=base, color=cNavy, scale=0.8] 
+    at ($(c_outputs_box.north west) + (\PanelCColLeftXRel, 1.0)$) {$\omega$};
+\node[anchor=base, color=cNavy, scale=0.8] 
+    at ($(c_outputs_box.north west) + (\PanelCColMidXRel, 1.0)$) {$\beta, \omega$};
+
+% Images row
+\node[anchor=center, scale=0.8] 
+    at ($(c_outputs_box.north west) + (\PanelCColLeftXRel, 1.6)$) {\safeincludegraphics[width=1.4cm]{\ComponentsPdfDir/weight_dist.pdf}};
+\node[anchor=center, scale=0.8] 
+    at ($(c_outputs_box.north west) + (\PanelCColMidXRel, 1.6)$) {\safeincludegraphics[width=1.4cm]{\ComponentsPdfDir/tiny_sliders.pdf}};
+\node[anchor=center, scale=0.8] 
+    at ($(c_outputs_box.north west) + (\PanelCColRightXRel, 1.6)$) {\safeincludegraphics[width=1.4cm]{\ProcessedDir/residue_work.png}};
+
+% Labels row
+\node[annotation, anchor=north, align=center] (c3_thumb_weightdist)
+    at ($(c_outputs_box.north west) + (\PanelCColLeftXRel, 2.2)$) {Structural\\ distributions};
+\node[annotation, anchor=north, align=center] (c3_thumb_params)
+    at ($(c_outputs_box.north west) + (\PanelCColMidXRel, 2.2)$) {Model-level\\ uncertainty};
+\node[annotation, anchor=north, align=center] (c3_thumb_struct)
+    at ($(c_outputs_box.north west) + (\PanelCColRightXRel, 2.2)$) {Ensemble-level\\ uncertainty};
+
+
+% ── End of Panel C ────────────────────────────────────────────────────────

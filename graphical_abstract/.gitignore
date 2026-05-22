@@ -1,0 +1,6 @@
+outputs/
+scripts/__pycache__/
+scripts/*.pyc
+tikz/figure.aux
+tikz/figure.log
+tikz/figure.pdf

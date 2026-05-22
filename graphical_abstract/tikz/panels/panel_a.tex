@@ -1,0 +1,99 @@
+% ============================================================
+% Panel A — Inputs
+% ============================================================
+\coordinate (pa_nw) at (\PanelAx, \PanelsY);
+
+\begin{pgfonlayer}{background}
+\node[panelA, minimum width=\PanelAW cm, minimum height=\PanelH cm, anchor=north west] (panel_A) at (pa_nw) {};
+\end{pgfonlayer}
+
+\node[panelLabel, anchor=north west] (a_label) at ($(panel_A.north west) + (\PanelHeaderX, \PanelHeaderY)$) {(a)};
+
+% --- Header Section (Centered) ---
+\node[annotation, anchor=north] (a_sub) at ($(panel_A.north) + (0, \PanelSubtitleY)$) {
+    \fontsize{10}{12}\selectfont Integration as a statistical connector
+};
+
+% --- Required Inputs Container ---
+\begin{pgfonlayer}{midground}
+\node[whiteCard, minimum width=\PanelAContentW, minimum height=8.0cm, anchor=north] 
+    (a_req_box) at ($(panel_A.north west) + (0.5*\PanelAW, \PanelAReqY)$) {};
+\end{pgfonlayer}
+
+% Position header relative to box
+\node[cardHeader, anchor=north, align=center, text width=\PanelAContentInnerW] (a_req_head) at ($(panel_A.north west) + (0.5*\PanelAW, \PanelAReqY + 0.15)$) {Required inputs};
+
+% Slot coordinates — moved up to give room for bar below
+\coordinate (a_col_c) at ($(panel_A.north west) + (\PanelAColLeftX, \PanelAReqY + 1.4)$);
+\coordinate (a_col_t) at ($(panel_A.north west) + (\PanelAColRightX, \PanelAReqY + 1.4)$);
+
+% --- Candidate Column (Left) ---
+\node[labelTeal, anchor=north] (a_c_tit) at (a_col_c) {Candidate};
+
+% Define consistent Y coordinates for row alignment
+\coordinate (a_img_y) at ($(a_c_tit.south) + (0, 1.05)$);
+\coordinate (a_text_y) at ($(a_c_tit.south) + (0, 2.0)$);
+
+% Stacked ensembles (centered on column)
+\node[anchor=center, opacity=0.2] (a_e_b) at (a_col_c |- a_img_y) {\safeincludegraphics[width=1.8cm]{\ProcessedDir/ensemble_stack.png}};
+\node[anchor=center, opacity=0.4] (a_e_m) at (a_e_b.center) {\safeincludegraphics[width=1.8cm]{\ProcessedDir/ensemble_stack.png}};
+\node[anchor=center] (a_e_i) at (a_col_c |- a_img_y) {
+    \safeincludegraphics[width=2.6cm]{\ProcessedDir/ensemble_stack.png}
+};
+
+\node[anchor=north, align=center, text width=4.2cm, scale=0.8, transform shape] (a_s_e) at (a_col_c |- a_text_y) {
+    \textbf{Structural Ensembles}\\[0.5mm]
+    {\fontsize{8}{9}\selectfont\itshape\sffamily\color{cGreyMid}(From simulations)}\\[1.5mm]
+    {\color{cGreyMid}\fontsize{8}{9.5}\selectfont\sffamily
+    Molecular Dynamics\\[0.8mm]
+    \textit{or}\\[0.8mm]
+    AlphaFold2 +\\[0.8mm]
+    MSA subsampling\par}
+};
+
+% --- Target Column (Right) ---
+\node[labelCoral, anchor=north] (a_t_tit) at (a_col_t) {Target};
+
+\node[anchor=center] (a_h_p) at (a_col_t |- a_img_y) {
+    \safeincludegraphics[width=2.6cm]{\ComponentsPdfDir/hdx_curves.pdf}
+};
+
+\node[anchor=north, align=center, text width=4.2cm, scale=0.8, transform shape] (a_e_d) at (a_col_t |- a_text_y) {
+    \textbf{Biophysical Data}\\[0.5mm]
+    {\fontsize{8}{9}\selectfont\itshape\sffamily\color{cGreyMid}(From experiments)}\\[1.5mm]
+    {\color{cGreyMid}\fontsize{8}{9.5}\selectfont\sffamily
+    HDX-MS Uptake Curves\\[0.8mm]
+    NMR Protection Factors\\[0.8mm]
+    \textit{or}\\[0.8mm]
+    SAXS Curves\par}
+};
+
+% --- Connector Step (Center) ---
+\node[tealStep, anchor=center, align=center, text depth=1mm, inner xsep=6pt, inner ysep=6pt,
+      scale=0.8, transform shape] (a_f_m) at (a_req_box.north |- a_img_y) {
+    \textbf{Forward model}\\[1mm]
+    $\text{f} (x; \beta) \rightarrow Y_{pred} $\\[1mm]
+    {\fontsize{7}{8}\selectfont\color{cGreyMid}(Best-Vendruscolo)}
+};
+
+% --- Timescale track (bottom of A1) ---
+\node[draw=cCharcoal, rounded corners=6pt, line width=0.5pt, 
+      minimum width=8.2cm, minimum height=0.55cm, 
+      left color=cTeal, right color=cCoral, 
+      anchor=south] (a_timescale) at ($(a_req_box.south) - (0, 0.6)$) {};
+
+\node[anchor=west, font=\sffamily\bfseries\color{white}, scale=0.7, xshift=0.5cm] at (a_timescale.west) {Candidate (fs--ms)};
+\node[anchor=east, font=\sffamily\bfseries\color{white}, scale=0.7, xshift=-0.5cm] at (a_timescale.east) {Target (ms--days)};
+
+% --- Optional: orthogonal data box (bottom) ---
+\begin{pgfonlayer}{midground}
+\node[dashedBox, anchor=north, text width=\PanelAContentW - 0.8cm, align=center] 
+    (a_opt_box) at ($(panel_A.north west) + (0.5*\PanelAW, \PanelAOptY)$) {
+        \textbf{Optional}: orthogonal data for cross-validation
+    };
+\end{pgfonlayer}
+
+\draw[procArrow] (a_e_i.east) -- (a_f_m.west);
+\draw[procArrow] (a_f_m.east) -- (a_h_p.west);
+
+\coordinate (a_optional_anchor_out) at (a_opt_box.south);
